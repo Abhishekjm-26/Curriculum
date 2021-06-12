@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Gravity</title>
+    <style>
+    canvas{
+        border:1px solid black;
+    }
+     body{
+        margin : 0;
+    }
+    </style>
+</head>
+<body>
+    <canvas></canvas>
+    <script>
+    var canvas=document.querySelector("canvas");
+    canvas.height=window.innerHeight;
+    canvas.width=window.innerWidth;
+    var c = canvas.getContext("2d");
+
+
+    var friction_y = 0.99;
+    var friction_x = 0.9;
+
+    function Ball(x,y,dx,dy,radius,color){
+        this.x = x;
+        this.y = y;
+        this.dx = dx;
+        this.dy = dy;
+        this.radius = radius;
+        this.color = color;
+
+        this.update = function(){
+            if(this.y + this.radius > canvas.height || this.y - this.radius < 0){
+                this.dy=-(this.dy);
+                this.dy*=friction_y;
+            }else{
+                //this.dy+=1;
+            }
+            if(this.x + this.radius > canvas.width || this.x - this.radius < 0){
+                this.dx=-this.dx;
+            }
+            
+            this.x += this.dx;
+            this.y += this.dy;
+            this.draw();
+        }
+        this.draw = function(){
+            c.beginPath()
+            c.arc(this.x,this.y,this.radius,0,Math.PI*2,false);
+            //console.log(this.y);
+            //c.strokeStyle = "black";
+            c.fillStyle = this.color;
+            c.fill();
+            //c.stroke();
+        }
+
+
+    }   
+    
+    var array = [];
+    var nos = 40;
+    
+    
+    for(var i=0;i<nos;i++){
+        var radius =Math.floor(Math.random()*20)+20;
+        var y = (Math.random() * (window.innerHeight/2 - 2*radius))+radius; 
+        var x = (Math.random() * (window.innerWidth - 2*radius))+radius;
+        var dy = Math.random()*2 + 1;
+        var dx = ((Math.random() - 0.5)*4);
+        var c_list=["gray","blue","red","green","yellow","pink","brown","orange","aqua","fuchsia","gold","gray","lime","megenta","white"];
+        var rgb=c_list[Math.floor(Math.random()*c_list.length)];
+        array.push(new Ball(x,y,dx,dy,radius,rgb));
+        console.log(dx);
+        console.log(dy);
+        console.log(radius);
+        console.log(rgb);
+        
+
+    }
+
+    function action(){
+        requestAnimationFrame(action);
+        c.clearRect(0,0,window.innerWidth,window.innerHeight);
+        for(var i=0;i<nos;i++){
+            array[i].update();
+        }
+    }
+    action();
+    
+
+    
+
+
+    </script>
+</body>
+</html>
